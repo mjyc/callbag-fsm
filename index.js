@@ -59,6 +59,7 @@ const hrun = (fsms, transition, initState) => (start, sink) => {
   });
 
   sink(0, t => {
+    console.log("hrun t", t);
     if (t === 1) {
       if (talkbacks.length === fsms.length) {
         if (state === null) {
@@ -95,6 +96,7 @@ const callbagToXs = timeSource => pullable =>
       let startStamp;
       let lastStamp;
       pullable(0, (t, d) => {
+        // console.log("callbagToXs t, d", t, d);
         if (t === 0) {
           const op = timeSource.createOperator();
           schedule = op.schedule;
@@ -111,7 +113,7 @@ const callbagToXs = timeSource => pullable =>
           typeof d === "undefined"
             ? schedule.complete(listener, lastStamp)
             : schedule.error(listener, lastStamp, d);
-        if (t === 0 || t === 1) talkback(1);
+        if (t === 0) talkback(1);
       });
     },
     stop() {}

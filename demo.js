@@ -1,8 +1,10 @@
-const { forEach, map, pipe, scan, take } = require("callbag-basics");
+const { forEach, map, pipe, scan, share } = require("callbag-basics");
+const dropAfter = require("callbag-drop-after");
 const random = require("random");
-const { run, subscribe, hrun } = require("./index");
+const { mockTimeSource } = require("@cycle/time");
+const { run, subscribe, hrun, callbagToXs } = require("./index");
 
-const makeRunNexkExercise = ({} = {}) => {
+const makeSimHuman = ({ dropAfterPredicate = () => true } = {}) => {
   const runFacingCenter = run(
     s => {
       if (s.label === "facing_center")
@@ -72,38 +74,60 @@ const makeRunNexkExercise = ({} = {}) => {
     }
   );
 
-  // TODOs:
-  // 1. finish implement "counting" (merge map & scan)
-  // 2. add dropwhen
-  // 3. remove duplicates
-  // 4. multicast it
+  // TODOs
   // 5. turn them into xstreams
   // 6. move traceviz in here and publish as a package
   // 7. switch the example into a simpler example and provide a mermaid diagram
-  return pipe(
+  const states = pipe(
     runSim,
-    map(x => ({
-      parent: x.label,
-      child: x.child.label,
-      stamp: x.stamp + x.child.stamp
-    })),
     scan(
-      (prev, x) => {
-        if (prev.parent !== x.parent)
-          return Object.assign({}, x, { i: prev.i + 1 });
-        return Object.assign({}, x, { i: prev.i });
-      },
+      (prev, x) =>
+        Object.assign(
+          {
+            parent: x.label,
+            child: x.child.label,
+            stamp: x.stamp + x.child.stamp
+          },
+          { i: prev.parent !== x.label ? prev.i + 1 : prev.i }
+        ),
       { i: 0 }
     ),
-    take(100)
+    dropAfter(dropAfterPredicate),
+    share
   );
+
+  return {
+    intention: map(x => ({ value: x.parent, stamp: x.stamp }))(states),
+    action: map(x => ({ value: x.child, stamp: x.stamp }))(states)
+  };
 };
 
-subscribe({
-  next: d => {
-    delete d.start;
-    delete d.stop;
-    console.log(d);
-  },
-  complete: () => {}
-})(makeRunNexkExercise());
+const simHuman = makeSimHuman({ dropAfterPredicate: x => x.i === 15 });
+
+const Time = mockTimeSource();
+const simHumanXs = Object.keys(simHuman).reduce((prev, x) => {
+  prev[x] = callbagToXs(Time)(simHuman[x]);
+  return prev;
+}, {});
+
+// simHumanXs.intention.addListener({
+//   next: console.log,
+//   error: console.error
+// });
+simHumanXs.action.addListener({
+  next: console.log,
+  error: err => console.error("err", err),
+  complete: () => console.log("completed")
+});
+
+setTimeout(() => Time.run(), 1000);
+// Time.run();
+
+// subscribe({
+//   next: d => {
+//     delete d.start;
+//     delete d.stop;
+//     console.log(d);
+//   },
+//   complete: () => {}
+// })(simHuman.intention);
