@@ -2,8 +2,7 @@
   "private": true,
   "scripts": {
     "prestart": "test -e ./src/data.json || echo {} > ./src/data.json",
-    "start": "npx live-server --watch=./src/data.json,./src/index.js,./index.html --open=index.html",
-    "demosim": "./node_modules/.bin/simulate voice > src/data.json"
+    "start": "npx live-server --watch=./src/data.json,./src/index.js,./index.html --open=index.html"
   },
   "devDependencies": {
     "chart.js": "^2.8.0"

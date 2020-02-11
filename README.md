@@ -6,31 +6,37 @@ A pausable & listenable callbag that sends data generated from running a finite 
 npm install callbag-fsm
 ```
 
-## Examples
+This repo was developed as a part of [interactive-program-repair](https://gitlab.com/mjyc/interactive-program-repair).
 
-TODO: update below example
+## Examples
 
 ```javascript
 const { run, subscribe } = require('callbag-fsm');
-const forEach = require('callbag-for-each');
 
-const source = fromIter([10,20,30,40])
+const source = run(s => (s === "S1" ? "S2"), "S1");
 
-forEach(x => console.log(x))(source); // 10
-                                      // 20
-                                      // 30
-                                      // 40
+subscribe({next: console.log})(source); // S1
+                                        // S2
+                                        // S1
+                                        // S2
+                                        // .
+                                        // .
+                                        // .
 ```
 
 ## Demo
 
-To run examples, install nodejs (>= v10.16.0) and npm (>= 6.9.0) and run
+Generating simulated sensor inputs, e.g., from a sim-human
 
 ```
 npm install;
-node demo.js; // generate simulated sensor inputs (from a sim-human)
+node demo.js; // generate
 ```
 
-TODO: finish here
+Visualizing generated sensor data:
 
-You
+```
+cd viz;
+npm install;
+node demo.js; // generate simulated sensor inputs (from a sim-human)
+```

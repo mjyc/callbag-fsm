@@ -2,98 +2,71 @@ const { forEach, map, pipe, scan, take } = require("callbag-basics");
 const random = require("random");
 const { run, subscribe, hrun } = require("./index");
 
-const makeRunNexkExercise = ({
-  minLevel = -15,
-  maxLevel = 15,
-  activeTimeout = 0,
-  inactiveTimeout = 500
-} = {}) => {
-  const runCenter = run(
+const makeRunNexkExercise = ({} = {}) => {
+  const runFacingCenter = run(
     s => {
-      if (s.label === "center")
+      if (s.label === "facing_center")
         return {
-          label: random.boolean() ? "left" : "right",
-          stamp: s.stamp + random.uniform(activeTimeout + 100, 1000)() // "uniform_min > activeTimeout"
+          label: random.boolean() ? "facing_center" : "facing_away",
+          stamp: s.stamp + random.uniform(500, 1000)()
         };
-      if (s.label === "left")
+      if (s.label === "facing_away")
+        // noise
         return {
-          label: "center",
-          stamp: s.stamp + random.uniform(0, inactiveTimeout)() // "uniform_max < inactiveTimeout"
-        };
-      if (s.label === "right")
-        return {
-          label: "center",
-          stamp: s.stamp + random.uniform(0, inactiveTimeout)() // "uniform_max < inactiveTimeout"
+          label: "facing_center",
+          stamp: s.stamp + random.uniform(100, 500)()
         };
       return s;
     },
     {
-      label: "center",
+      label: "facing_center",
       stamp: 0
     }
   );
 
-  const runLeft = run(
+  const runFacingAway = run(
     s => {
-      if (s.label === "left")
+      if (s.label === "facing_away")
         return {
-          label: "center",
-          stamp: s.stamp + random.uniform(inactiveTimeout + 100, 1000)() // "uniform_min > inactiveTimeout"
+          label: "facing_center",
+          stamp: s.stamp + random.uniform(1500, 2000)()
         };
       return s;
     },
     {
-      label: "left",
+      label: "facing_away",
       stamp: 0
     }
   );
 
-  const runRight = run(
-    s => {
-      if (s.label === "right")
-        return {
-          label: "center",
-          stamp: s.stamp + random.uniform(inactiveTimeout + 100, 1000)() // "uniform_min > inactiveTimeout"
-        };
-      return s;
-    },
-    {
-      label: "right",
-      stamp: 0
-    }
-  );
-
-  const runNeckExercise = hrun(
-    [runCenter, runLeft, runRight],
+  const runSim = hrun(
+    [runFacingCenter, runFacingAway],
     s => {
       if (
-        s.label === "hcenter" &&
-        (s.child.label === "left" || s.child.label === "right") &&
+        s.label === "intention_center" &&
+        s.child.label === "facing_away" &&
         s.child.stamp > 5000
       )
         return {
-          label: "h" + s.child.label,
+          label: "intention_away",
           child: { label: s.child.label, stamp: 0 },
           stamp: s.stamp + s.child.stamp,
-          start: s.child.label === "left" ? 1 : 2,
+          start: 1,
           stop: 0
         };
-      if (
-        (s.label === "hleft" || s.label === "hright") &&
-        s.child.label === "center"
-      )
+      if (s.label === "intention_away" && s.child.label === "facing_center")
         return {
-          label: "hcenter",
-          child: { label: "center", stamp: 0 },
+          label: "intention_center",
+          child: { label: "facing_center", stamp: 0 },
           stamp: s.stamp + s.child.stamp,
           start: 0,
-          stop: s.label === "hleft" ? 1 : 2
+          stop: 1
         };
       else return Object.assign({}, s, { start: undefined, stop: undefined });
     },
     {
-      label: "hcenter",
-      child: { label: "center", stamp: 0 },
+      label: "intention_center",
+      child: { label: "facing_center", stamp: 0 },
       stamp: 0,
       start: 0
     }
@@ -108,7 +81,7 @@ const makeRunNexkExercise = ({
   // 6. move traceviz in here and publish as a package
   // 7. switch the example into a simpler example and provide a mermaid diagram
   return pipe(
-    runNeckExercise,
+    runSim,
     map(x => ({
       parent: x.label,
       child: x.child.label,
