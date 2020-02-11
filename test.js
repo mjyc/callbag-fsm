@@ -1,7 +1,7 @@
 const { forEach, fromIter, map, pipe, take } = require("callbag-basics");
 const xs = require("xstream").default;
 const { mockTimeSource } = require("@cycle/time");
-const { run, subscribe, hrun, callbagToXs, xsToCallbag } = require("./index");
+const { run, hrun, subscribe } = require("./index");
 
 describe("run", () => {
   test("#0", done => {
@@ -72,44 +72,6 @@ describe("hrun", () => {
           done();
         }
       })
-    );
-  });
-});
-
-describe("callbagToXs", () => {
-  test("#0", done => {
-    const actual = [];
-    const expected = [{ stamp: 10 }, { stamp: 20 }, { stamp: 30 }];
-    const Time = mockTimeSource();
-    callbagToXs(Time)(
-      fromIter([{ stamp: 10 }, { stamp: 20 }, { stamp: 30 }])
-    ).addListener({
-      next: x => {
-        actual.push(x);
-      },
-      complete: () => {
-        expect(actual).toEqual(expected);
-        done();
-      }
-    });
-    Time.run();
-  });
-});
-
-describe("xsToCallbag", () => {
-  test("#0", done => {
-    const actual = [];
-    const expected = [0, 1, 2, 3, 4];
-    pipe(
-      xsToCallbag(xs.periodic(1).take(5)),
-      source =>
-        source(0, (t, d) => {
-          if (t === 1) actual.push(d);
-          if (t === 2) {
-            expect(actual).toEqual(expected);
-            done();
-          }
-        })
     );
   });
 });

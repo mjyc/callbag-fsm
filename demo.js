@@ -1,8 +1,7 @@
 const { forEach, map, pipe, scan, share } = require("callbag-basics");
 const dropAfter = require("callbag-drop-after");
 const random = require("random");
-const { mockTimeSource } = require("@cycle/time");
-const { run, subscribe, hrun, callbagToXs } = require("./index");
+const { run, subscribe, hrun } = require("./index");
 
 const makeSimHuman = ({ dropAfterPredicate = () => true } = {}) => {
   const runFacingCenter = run(
@@ -75,8 +74,6 @@ const makeSimHuman = ({ dropAfterPredicate = () => true } = {}) => {
   );
 
   // TODOs
-  // 5. turn them into xstreams
-  // 6. move traceviz in here and publish as a package
   // 7. switch the example into a simpler example and provide a mermaid diagram
   const states = pipe(
     runSim,
@@ -104,30 +101,21 @@ const makeSimHuman = ({ dropAfterPredicate = () => true } = {}) => {
 
 const simHuman = makeSimHuman({ dropAfterPredicate: x => x.i === 15 });
 
-const Time = mockTimeSource();
-const simHumanXs = Object.keys(simHuman).reduce((prev, x) => {
-  prev[x] = callbagToXs(Time)(simHuman[x]);
+const done = {};
+const simHumanRecorded = Object.keys(simHuman).reduce((prev, k) => {
+  prev[k] = [];
+  setTimeout(() => {
+    subscribe({
+      next: x => prev[k].push(x),
+      complete: () => {
+        done[k] = true;
+        if (Object.keys(done).length === Object.keys(simHuman).length) {
+          // done
+          console.log(JSON.stringify({ input: simHumanRecorded }, null, 2));
+        }
+      }
+    })(simHuman[k]);
+  }, 0);
+
   return prev;
 }, {});
-
-// simHumanXs.intention.addListener({
-//   next: console.log,
-//   error: console.error
-// });
-simHumanXs.action.addListener({
-  next: console.log,
-  error: err => console.error("err", err),
-  complete: () => console.log("completed")
-});
-
-setTimeout(() => Time.run(), 1000);
-// Time.run();
-
-// subscribe({
-//   next: d => {
-//     delete d.start;
-//     delete d.stop;
-//     console.log(d);
-//   },
-//   complete: () => {}
-// })(simHuman.intention);

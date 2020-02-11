@@ -10,11 +10,8 @@
   "author": "Michael Jae-Yoon Chung",
   "license": "MIT",
   "repository": "https://gitlab.com/mjyc/callbag-fsm",
-  "dependencies": {
-    "xstream": "11.11.0"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@cycle/time": "0.20.0",
     "callbag-basics": "3.2.0",
     "callbag-drop-after": "^1.0.0",
     "random": "2.1.1"

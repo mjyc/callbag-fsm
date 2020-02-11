@@ -30,13 +30,14 @@ Generating simulated sensor inputs, e.g., from a sim-human
 
 ```
 npm install;
-node demo.js; // generate
+node demo.js;  // print out results
 ```
 
 Visualizing generated sensor data:
 
 ```
+node demo.js > viz/src/data.json
 cd viz;
 npm install;
-node demo.js; // generate simulated sensor inputs (from a sim-human)
+pr start;
 ```
