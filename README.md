@@ -6,7 +6,7 @@ A pausable & listenable callbag that sends data generated from running a finite 
 npm install callbag-fsm
 ```
 
-This repo was developed as a part of [interactive-program-repair](https://gitlab.com/mjyc/interactive-program-repair).
+This repo is a part of [interactive-program-repair](https://gitlab.com/mjyc/interactive-program-repair).
 
 ## Examples
 
