@@ -1,24 +1,3 @@
-/**
- * callbag-fsm
- * -----------
- *
- * `npm install callbag-fsm``
- *
- * Examples
- * --------
- *
- *     const { run, subscribe } = require('callbag-fsm');
- *     const forEach = require('callbag-for-each');
- *
- *     // TODO: update below
- *     const source = fromIter([10,20,30,40])
- *
- *     forEach(x => console.log(x))(source); // 10
- *                                           // 20
- *                                           // 30
- *                                           // 40
- */
-
 // inspired by the "pausable stream" example at https://egghead.io/articles/comparing-callbags-to-rxjs-for-reactive-programming
 const run = (transition, initState) => (start, sink) => {
   if (start !== 0) return;

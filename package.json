@@ -1,7 +1,7 @@
 {
   "name": "callbag-fsm",
   "version": "0.0.0",
-  "description": "A library for tablet robot face starter project",
+  "description": "A pausable & listenable callbag that sends data generated from running a finite state machine",
   "main": "index.js",
   "scripts": {
     "test": "npx jest",
