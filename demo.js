@@ -14,7 +14,7 @@ const makeSimHuman = ({ dropAfterPredicate = () => true } = {}) => {
           stamp: s.stamp + random.uniform(500, 1000)()
         };
       if (s.label === "facing_away")
-        // noise
+        // simulating noisy detection
         return {
           label: "facing_center",
           stamp: s.stamp + random.uniform(100, 500)()
