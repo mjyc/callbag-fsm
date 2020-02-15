@@ -1,17 +1,17 @@
 const visualize = simTraces => {
   // process simTraces
+  const inputTraces = {};
   Object.keys(simTraces.input).map(k => {
     if (simTraces.input[k].length > 0) {
-      simTraces[k] = simTraces.input[k];
+      inputTraces[k] = simTraces.input[k];
     }
   });
-  delete simTraces.input;
 
   // update DOM
   const elems = {
     div: document.createElement("div"),
     canvases: []
-      .concat(Object.keys(simTraces))
+      .concat(Object.keys(inputTraces))
       .map(() => document.createElement("canvas"))
   };
 
@@ -39,23 +39,24 @@ const visualize = simTraces => {
     cyan: "#17becf"
   };
 
-  Object.keys(simTraces)
+  Object.keys(inputTraces)
     .map(k => {
       const suggestedMax =
         []
-          .concat(...Object.values(simTraces))
+          .concat(...Object.values(inputTraces))
           .map(({ stamp }) => stamp)
           .sort((a, b) => a - b)
           .reverse()[0] / 1000;
       return {
-        data: simTraces[k].map(({ stamp, value }) => ({
+        data: inputTraces[k].map(({ stamp, value }) => ({
           x: stamp / 1000,
           y: value
         })),
-        type: typeof simTraces[k][0].value === "string" ? "category" : "linear",
+        type:
+          typeof inputTraces[k][0].value === "string" ? "category" : "linear",
         labels:
-          typeof simTraces[k][0].value === "string"
-            ? simTraces[k]
+          typeof inputTraces[k][0].value === "string"
+            ? inputTraces[k]
                 .map(k => k.value)
                 .filter((k, i, arr) => arr.indexOf(k) === i)
                 .reverse()
