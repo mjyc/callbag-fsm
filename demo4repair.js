@@ -5,10 +5,6 @@
  *   the [interactive_program_repair](../../) repo.
  */
 
-// const fs = require("fs");
-// const programs = require("../programs");
-// const { repair } = require("../../repair.js");
-
 const { forEach, fromIter, map, pipe, scan, share } = require("callbag-basics");
 const dropAfter = require("callbag-drop-after");
 const dropRepeats = require("callbag-drop-repeats");

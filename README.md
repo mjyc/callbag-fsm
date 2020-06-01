@@ -1,10 +1,13 @@
 # callbag-fsm
 
-A pausable & listenable callbag that sends data generated from running a finite state machine
+A pausable & listenable callbag that sends data generated from running a finite state machine.
 
 ```
 npm install callbag-fsm
 ```
+
+This [callbag](https://github.com/callbag/callbag) is designed to be used for sampling-based [model-based testing](https://github.com/dubzzz/fast-check/blob/master/documentation/1-Guides/HandsOnPropertyBased.md) (or [property-based testing](https://github.com/dubzzz/fast-check/blob/master/documentation/1-Guides/HandsOnPropertyBased.md)) of [reactive programs](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754) (e.g., [ReactiveX](http://reactivex.io/), [flapjax](https://www.flapjax-lang.org/), [Functional reactive animation](https://dl.acm.org/doi/pdf/10.1145/258948.258973)).
+
 
 This repo is a part of [interactive-program-repair](https://gitlab.com/mjyc/interactive-program-repair).
 
@@ -54,7 +57,7 @@ stateDiagram
     facing_away --> facing_center
   }
 ```
-_if you can't see an image, click [here](https://mermaid.ink/img/eyJjb2RlIjoic3RhdGVEaWFncmFtXG4gIFsqXSAtLT4gaW50ZW50aW9uX2NlbnRlclxuICBpbnRlbnRpb25fY2VudGVyIC0tPiBpbnRlbnRpb25fYXdheTogZWxhcHNlZFRpbWUgPiA1MDAwPGJyPiYmIHN1YnN0YXRlID09IFwiZmFjaW5nX2F3YXlcIlxuICBpbnRlbnRpb25fYXdheSAtLT4gaW50ZW50aW9uX2NlbnRlcjogc3Vic3RhdGUgPT0gXCJmYWNpbmdfY2VudGVyXCJcbiAgaW50ZW50aW9uX2NlbnRlciAtLT4gWypdOiBkcm9wQWZ0ZXJQcmVkaWNhdGUgPT0gdHJ1ZVxuICBpbnRlbnRpb25fYXdheSAtLT4gWypdOiBkcm9wQWZ0ZXJQcmVkaWNhdGUgPT0gdHJ1ZVxuXG4gIHN0YXRlIGludGVudGlvbl9jZW50ZXIge1xuICAgIFsqXSAtLT4gZmFjaW5nX2NlbnRlclxuICAgIGZhY2luZ19jZW50ZXIgLS0-IGZhY2luZ19hd2F5XG4gICAgZmFjaW5nX2F3YXkgLS0-IGZhY2luZ19jZW50ZXJcbiAgfVxuXG4gIHN0YXRlIGludGVudGlvbl9hd2F5IHtcbiAgICBbKl0gLS0-IGZhY2luZ19hd2F5XG4gICAgZmFjaW5nX2F3YXkgLS0-IGZhY2luZ19jZW50ZXJcbiAgfSIsIm1lcm1haWQiOnsidGhlbWUiOiJkZWZhdWx0In19)._
+_if you can't see an image, click [here](https://gitlab.com/mjyc/callbag-fsm#demo)._
 
 Visualizing generated sensor data:
 
